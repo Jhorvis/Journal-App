@@ -11,9 +11,15 @@ const dataForm = {
 
 }
 
+const formValidate = {
+  displayName: [(value)=>value.length >= 1, 'El nombre es requerido'] ,
+  email: [(value)=>value.include('@'), 'debe escribir un correo valido'],
+  password: [(value)=>value.length >= 6, 'La contraseña debe tener 6 caracteres']
+}
+
 export const RegisterPage = () => {
 
- const {displayName, email, password, onInputChage, state} = useForm(dataForm);
+ const {displayName, email, password, onInputChage, state} = useForm(dataForm, formValidate);
 
  
  const onSubmit = (event) => {

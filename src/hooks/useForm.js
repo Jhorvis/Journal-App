@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export const useForm = (parametros = {}) => {
+export const useForm = (parametros = {}, formValidate = []) => {
 
   const [state, setState] = useState(parametros)
 
