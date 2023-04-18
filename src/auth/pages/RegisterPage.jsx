@@ -1,10 +1,13 @@
 import { HowToReg } from '@mui/icons-material'
-import { Button, Grid, Link, TextField, Typography } from '@mui/material'
+import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material'
 import {Link as RouterLink} from 'react-router-dom'
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm } from '../../hooks/useForm'
+import { useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { startRegisterWithEmailPassword } from '../../store/auth/thunks'
 
-const dataForm = {
+const formData = {
   displayName: '',
   email: '',
   password: ''
@@ -12,6 +15,7 @@ const dataForm = {
 }
 
 const formValidations = {
+
   email: [ (value) => value.includes('@'), 'El correo debe de tener una @'],
   password: [ (value) => value.length >= 6, 'El password debe de tener más de 6 letras.'],
   displayName: [ (value) => value.length >= 1, 'El nombre es obligatorio.'],
@@ -19,25 +23,29 @@ const formValidations = {
 
 export const RegisterPage = () => {
 
- const {
-        displayName, 
-        email, 
-        password, 
-        onInputChage, 
-        state,  
-        isFormValid, 
-        displayNameValid, 
-        emailValid, 
-        passwordValid } = useForm(dataForm, formValidations);
+  const [formSubmited, setformSubmited] = useState(false)
 
-  
+  const {status, erroMessage} = useSelector(state => state.auth)
+
+  const isCheckingAuthentication = useMemo(() => status === 'checking', [status])
+
+const { 
+    formState, displayName, email, password, onInputChange,
+    isFormValid, displayNameValid, emailValid, passwordValid, 
+  } = useForm( formData, formValidations );
+
+
+  const dispatch = useDispatch()
+
  const onSubmit = (event) => {
   event.preventDefault();
-  console.log(state)
+  setformSubmited(true)
+  if ( !isFormValid ) return;
+  dispatch(startRegisterWithEmailPassword(formState))
  }
 
   return (
-    <AuthLayout title="Register">
+    <AuthLayout title="Register"> 
     <form onSubmit={onSubmit}>
 
       <Grid container>
@@ -50,7 +58,9 @@ export const RegisterPage = () => {
               placeholder='John Doe'
               name='displayName'
               value={displayName}
-              onChange={onInputChage}
+              onChange={onInputChange}
+              error={!!displayNameValid && formSubmited}
+              helperText={displayNameValid}
               fullWidth
               
             />
@@ -64,7 +74,9 @@ export const RegisterPage = () => {
               placeholder='johndoe@mydomain.com'
               name='email'
               value={email}
-              onChange={onInputChage}
+              onChange={onInputChange}
+              error={!!emailValid && formSubmited}
+              helperText={emailValid}
               fullWidth
               
             />
@@ -78,7 +90,9 @@ export const RegisterPage = () => {
               placeholder='*********'
               name='password'
               value={password}
-              onChange={onInputChage}
+              onChange={onInputChange}
+              error={!!passwordValid && formSubmited}
+              helperText={passwordValid}
               fullWidth
               
             />
@@ -88,7 +102,17 @@ export const RegisterPage = () => {
         <Grid container spacing={2} sx={{mb: 2}}>
 
             <Grid item xs={12} sx={{mt: 2}}>
-              <Button variant='contained' type="submit" fullWidth>
+              <Alert severity='error'
+                display={!!erroMessage?'':'none'}
+              >
+                  {erroMessage}
+              </Alert>
+                <hr />
+              <Button 
+                  variant='contained' 
+                  type="submit" 
+                  disabled={isCheckingAuthentication}
+                  fullWidth>
                 <HowToReg />
                 <Typography sx={{ml: 1}}> REGISTER </Typography>
               </Button>

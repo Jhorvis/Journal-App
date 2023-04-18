@@ -22,13 +22,13 @@ export const authSlice = createSlice({
       //sencente
     },
 
-    logout: (state, payload) => {
+    logout: (state, {payload}) => {
       state.status= 'not-authenticated';
       state.uid= null;
       state.email= null;
       state.displayName= null;
       state.photoURL= null;
-      state.erroMessage= payload.payload;
+      state.erroMessage= payload;
     },
 
     checkingCredentials: (state) => {

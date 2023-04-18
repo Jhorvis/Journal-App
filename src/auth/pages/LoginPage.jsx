@@ -2,25 +2,27 @@ import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {Link as RouterLink} from 'react-router-dom'
 import { Google, Key } from '@mui/icons-material'
-import { Button, Grid, Link, TextField, Typography } from '@mui/material'
+import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material'
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm } from '../../hooks'
-import { checkingAuthentication, startGoogleSignIn } from '../../store/auth/thunks'
+import { startLoginWithEmailPassword } from '../../store/auth/thunks'
 
 export const LoginPage = () => {
 
-  const {status} = useSelector( state => state.auth)
 
- const checking = useMemo(() => status === 'checking', [status])
 
- const {email, password, onInputChage} =  useForm({
-    email: 'jhorvissanchez@gmail.com',
-    password: '123456'
+  const {status, errorMessage} = useSelector( state => state.auth)
+
+  const checking = useMemo(() => status === 'checking', [status])
+
+  const {email, password, onInputChange} =  useForm({
+    email: '',
+    password: ''
   })
   
   const onSubmit = (event) => {
     event.preventDefault();
-      dispatch(checkingAuthentication())
+      dispatch(startLoginWithEmailPassword({email, password}))
   }
 
   const onGoogleSignIn = () => {
@@ -42,7 +44,7 @@ export const LoginPage = () => {
             type="email"
             placeholder='jondoe@mydomain.com'
             name='email'
-            onChange={onInputChage}
+            onChange={onInputChange}
             value={email}
             fullWidth
             
@@ -56,11 +58,22 @@ export const LoginPage = () => {
             type="password"
             name="password"
             placeholder='*********'
-            onChange={onInputChage}
+            onChange={onInputChange}
             value={password}
             fullWidth
             
           />
+        <Grid 
+          container
+          display={ !!errorMessage ? '': 'none' }
+          sx={{ mt: 1 }}>
+          <Grid 
+             item 
+             xs={ 12 } >
+                <Alert severity='error'>{ errorMessage }</Alert>
+              </Grid>
+        </Grid>
+
         </Grid>
             <Grid container spacing={2} sx={{mb: 2}}>
 
