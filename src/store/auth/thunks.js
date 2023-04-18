@@ -1,4 +1,4 @@
-import { loginWithEmailPassword, registerUserWithEmailPassword, singInWithGoogle } from "../../journal/providers"
+import { loginWithEmailPassword, logoutFirebase, registerUserWithEmailPassword, singInWithGoogle } from "../../journal/providers"
 import { checkingCredentials, login, logout } from "./authSlice"
 
 export const checkingAuthentication = (email, password) => {
@@ -42,8 +42,8 @@ export const startRegisterWithEmailPassword = ({email, password, displayName}) =
 export const startLoginWithEmailPassword = ({email, password}) => {
 
     return async(dispatch) => {
-
-        console.log(password)
+        
+        dispatch(checkingCredentials())
 
         const result  = await loginWithEmailPassword({email, password})
         
@@ -52,5 +52,12 @@ export const startLoginWithEmailPassword = ({email, password}) => {
         console.log(result.error)
         
         if(result.ok) dispatch(login(result))
+    }
+}
+
+export const startLogoutFirebase = () => {
+    return async(dispatch) => {
+        await logoutFirebase()
+        dispatch(logout())
     }
 }
