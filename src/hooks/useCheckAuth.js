@@ -14,7 +14,7 @@ export const useCheckAuth = () => {
             if( !user ) return dispatch(logout())
 
             const {uid, photoURL, displayName, email} =  user;
-            dispatch(login(uid, photoURL, displayName, email))
+            dispatch(login({uid, photoURL, displayName, email}))
         })
         
     }, [])

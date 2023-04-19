@@ -7,6 +7,7 @@ import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { startRegisterWithEmailPassword } from '../../store/auth/thunks'
 
+
 const formData = {
   displayName: '',
   email: '',
@@ -46,7 +47,7 @@ const {
 
   return (
     <AuthLayout title="Register"> 
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className='animate__animated animate__fadeIn animate__faster'>
 
       <Grid container>
           <Grid
@@ -61,8 +62,7 @@ const {
               onChange={onInputChange}
               error={!!displayNameValid && formSubmited}
               helperText={displayNameValid}
-              fullWidth
-              
+              fullWidth              
             />
           </Grid>
           <Grid
