@@ -3,14 +3,12 @@ import { AddOutlined } from "@mui/icons-material"
 import { IconButton } from "@mui/material"
 
 import { JournalLayout } from "../layout/JournalLayout"
-import { NoteView } from "../views"
+import { NoteView, NothingSelectedView } from "../views"
 import { startNewNote } from "../../store/journal/thunks"
 
 export const JournalPages = () => {
 
-  const { isSaving } = useSelector(state => state.journal)
-
-  console.log(isSaving)
+  const { isSaving, active } = useSelector(state => state.journal)
 
   const dispatch = useDispatch()
 
@@ -20,7 +18,12 @@ export const JournalPages = () => {
   return (
     <JournalLayout>
 {     /* <NothingSelectedView/>*/}
-    <NoteView/>
+
+  {
+    (!!active)
+    ?<NoteView/>
+    :<NothingSelectedView/>
+  }    
 
     <IconButton
       size="large"
