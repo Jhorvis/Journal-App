@@ -7,18 +7,18 @@ import { AuthLayout } from '../layout/AuthLayout'
 import { useForm } from '../../hooks'
 import { startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth/thunks'
 
+const formData = {
+  email: '',
+  password: ''
+}
+
 export const LoginPage = () => {
-
-
 
   const {status, errorMessage} = useSelector( state => state.auth)
 
   const checking = useMemo(() => status === 'checking', [status])
 
-  const {email, password, onInputChange} =  useForm({
-    email: '',
-    password: ''
-  })
+  const {email, password, onInputChange} =  useForm(formData)
   
   const onSubmit = (event) => {
     event.preventDefault();

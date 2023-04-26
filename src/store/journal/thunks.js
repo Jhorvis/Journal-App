@@ -44,8 +44,23 @@ export const startLoadingNotes = () => {
 
         })*/
 
-        
 
     }
 
+}
+
+
+export const startUpdateNotes = () => {
+
+    return async (dispatch, getState) => {
+        const { uid } = getState().auth;
+        const { active:note } = getState().journal;
+
+        const noteToFireStore = { ...note };
+        delete noteToFireStore.id;
+
+        const docRef = doc(FirebaseDB, `${ uid }/journal/notes/${ note.id }`);
+        await setDoc(docRef, noteToFireStore, { merge: true })
+    }
+        
 }

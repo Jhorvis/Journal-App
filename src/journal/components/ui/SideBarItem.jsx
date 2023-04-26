@@ -1,12 +1,22 @@
 import { TurnedInNot } from "@mui/icons-material"
 import { Grid, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
+import { setActiveNote } from "../../../store/journal/journalSlice"
+import { useDispatch } from "react-redux"
 
 
 export const SideBarItem = ({ note }) => {
 
+    const dispatch = useDispatch()
+
+    const onActiveNote = () => {
+
+        dispatch(setActiveNote(note))
+
+    }
+
   return (
     <ListItem disablePadding>
-        <ListItemButton>
+        <ListItemButton onClick={ onActiveNote }>
             <ListItemIcon>
                 <TurnedInNot />
             </ListItemIcon>
