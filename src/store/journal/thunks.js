@@ -1,6 +1,6 @@
 import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewEmptyNote, savingNewNote, setActiveNote } from "./journalSlice";
+import { addNewEmptyNote, savingNewNote, setActiveNote, setSaving, updateNote } from "./journalSlice";
 import { loadNotes } from "../../helpers/loadingNotes";
 import { setNotes } from "./journalSlice";
 
@@ -53,6 +53,7 @@ export const startLoadingNotes = () => {
 export const startUpdateNotes = () => {
 
     return async (dispatch, getState) => {
+        dispatch( setSaving() );
         const { uid } = getState().auth;
         const { active:note } = getState().journal;
 
@@ -61,6 +62,8 @@ export const startUpdateNotes = () => {
 
         const docRef = doc(FirebaseDB, `${ uid }/journal/notes/${ note.id }`);
         await setDoc(docRef, noteToFireStore, { merge: true })
+
+        dispatch( updateNote( note ) );
     }
         
 }

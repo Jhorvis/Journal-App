@@ -8,12 +8,13 @@ import { ImageGallery } from '../components'
 import { useForm } from '../../hooks/useForm';
 import { setActiveNote } from '../../store/journal/journalSlice';
 import { startUpdateNotes } from '../../store/journal/thunks';
+import Swal from 'sweetalert2';
 
 
 
 export const NoteView = ({active}) => {
 
-   const { active:note } = useSelector(state => state.journal)
+   const { active:note, messageSaved, isSaving } = useSelector(state => state.journal)
 
    const { onInputChange, title, body, date, formState } = useForm(note)
 
@@ -34,6 +35,17 @@ export const NoteView = ({active}) => {
         dispatch(startUpdateNotes())
    }
    
+   useEffect(() => {
+
+    if (!!messageSaved) {
+    Swal.fire(
+        'Guardado Correctamente!',
+        messageSaved,
+        'success'
+      )
+    }
+   }, [messageSaved])
+   
 
 
   return (
@@ -46,6 +58,7 @@ export const NoteView = ({active}) => {
                 color="primary" 
                 sx={{ padding: 2 }}
                 onClick={ onUpdateNote }
+                disabled={!!isSaving}
                 >
                 <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
                 Guardar
